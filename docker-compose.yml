@@ -1,0 +1,30 @@
+version: '2'
+services:
+    climate:
+        build: .
+        container_name: climate_webapp
+        ports:
+            - 5487:3001
+            - 5858:5858
+        environment:
+            - NODE_ENV=production
+        depends_on:
+            - influxdb
+            - grafana
+        links:
+            - influxdb
+            - grafana
+    influxdb:
+        image: influxdb:latest
+        container_name: influxdb
+        ports:
+            - 5488:8086
+        env_file:
+            - 'env.influxdb'
+    grafana:
+        image: grafana/grafana:latest
+        container_name: grafana
+        ports:
+            - 5489:3000
+        links:
+            - influxdb
